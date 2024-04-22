@@ -14,6 +14,11 @@
 		CF1972852BD619A500D2404F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF1972832BD619A500D2404F /* Main.storyboard */; };
 		CF1972872BD619A600D2404F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF1972862BD619A600D2404F /* Assets.xcassets */; };
 		CF19728A2BD619A600D2404F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF1972882BD619A600D2404F /* LaunchScreen.storyboard */; };
+		CF1972922BD61EA700D2404F /* ApiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1972912BD61EA700D2404F /* ApiViewController.swift */; };
+		CF1972942BD61FE800D2404F /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1972932BD61FE800D2404F /* FavoriteViewController.swift */; };
+		CF1972962BD62E8800D2404F /* ApiKey.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF1972952BD62E8800D2404F /* ApiKey.plist */; };
+		CF1972982BD62FFD00D2404F /* ShopCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1972972BD62FFD00D2404F /* ShopCell.swift */; };
+		CF19729A2BD64C3800D2404F /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1972992BD64C3800D2404F /* ApiResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +33,11 @@
 		CF1972862BD619A600D2404F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CF1972892BD619A600D2404F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF19728B2BD619A600D2404F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF1972912BD61EA700D2404F /* ApiViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiViewController.swift; sourceTree = "<group>"; };
+		CF1972932BD61FE800D2404F /* FavoriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
+		CF1972952BD62E8800D2404F /* ApiKey.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ApiKey.plist; sourceTree = "<group>"; };
+		CF1972972BD62FFD00D2404F /* ShopCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopCell.swift; sourceTree = "<group>"; };
+		CF1972992BD64C3800D2404F /* ApiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,10 +93,15 @@
 				CF19727D2BD619A500D2404F /* AppDelegate.swift */,
 				CF19727F2BD619A500D2404F /* SceneDelegate.swift */,
 				CF1972812BD619A500D2404F /* ViewController.swift */,
+				CF1972912BD61EA700D2404F /* ApiViewController.swift */,
+				CF1972932BD61FE800D2404F /* FavoriteViewController.swift */,
+				CF1972972BD62FFD00D2404F /* ShopCell.swift */,
+				CF1972992BD64C3800D2404F /* ApiResponse.swift */,
 				CF1972832BD619A500D2404F /* Main.storyboard */,
 				CF1972862BD619A600D2404F /* Assets.xcassets */,
 				CF1972882BD619A600D2404F /* LaunchScreen.storyboard */,
 				CF19728B2BD619A600D2404F /* Info.plist */,
+				CF1972952BD62E8800D2404F /* ApiKey.plist */,
 			);
 			path = ApiApp;
 			sourceTree = "<group>";
@@ -152,6 +167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF19728A2BD619A600D2404F /* LaunchScreen.storyboard in Resources */,
+				CF1972962BD62E8800D2404F /* ApiKey.plist in Resources */,
 				CF1972872BD619A600D2404F /* Assets.xcassets in Resources */,
 				CF1972852BD619A500D2404F /* Main.storyboard in Resources */,
 			);
@@ -207,8 +223,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF1972822BD619A500D2404F /* ViewController.swift in Sources */,
+				CF1972982BD62FFD00D2404F /* ShopCell.swift in Sources */,
 				CF19727E2BD619A500D2404F /* AppDelegate.swift in Sources */,
+				CF19729A2BD64C3800D2404F /* ApiResponse.swift in Sources */,
+				CF1972942BD61FE800D2404F /* FavoriteViewController.swift in Sources */,
 				CF1972802BD619A500D2404F /* SceneDelegate.swift in Sources */,
+				CF1972922BD61EA700D2404F /* ApiViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
