@@ -19,6 +19,7 @@
 		CF1972962BD62E8800D2404F /* ApiKey.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF1972952BD62E8800D2404F /* ApiKey.plist */; };
 		CF1972982BD62FFD00D2404F /* ShopCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1972972BD62FFD00D2404F /* ShopCell.swift */; };
 		CF19729A2BD64C3800D2404F /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1972992BD64C3800D2404F /* ApiResponse.swift */; };
+		CFEE74942BD736D600796272 /* FavoriteShop.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEE74932BD736D600796272 /* FavoriteShop.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		CF1972952BD62E8800D2404F /* ApiKey.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ApiKey.plist; sourceTree = "<group>"; };
 		CF1972972BD62FFD00D2404F /* ShopCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopCell.swift; sourceTree = "<group>"; };
 		CF1972992BD64C3800D2404F /* ApiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
+		CFEE74932BD736D600796272 /* FavoriteShop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteShop.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 				CF1972812BD619A500D2404F /* ViewController.swift */,
 				CF1972912BD61EA700D2404F /* ApiViewController.swift */,
 				CF1972932BD61FE800D2404F /* FavoriteViewController.swift */,
+				CFEE74932BD736D600796272 /* FavoriteShop.swift */,
 				CF1972972BD62FFD00D2404F /* ShopCell.swift */,
 				CF1972992BD64C3800D2404F /* ApiResponse.swift */,
 				CF1972832BD619A500D2404F /* Main.storyboard */,
@@ -229,6 +232,7 @@
 				CF1972942BD61FE800D2404F /* FavoriteViewController.swift in Sources */,
 				CF1972802BD619A500D2404F /* SceneDelegate.swift in Sources */,
 				CF1972922BD61EA700D2404F /* ApiViewController.swift in Sources */,
+				CFEE74942BD736D600796272 /* FavoriteShop.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
