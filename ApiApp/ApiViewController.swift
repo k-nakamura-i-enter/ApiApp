@@ -11,9 +11,10 @@ import AlamofireImage
 import RealmSwift
 import SafariServices
 
-class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     let realm = try! Realm()
     
@@ -22,6 +23,9 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     var isLoading = false
     var isLastLoaded = false
+    
+    var keyWord: String = "グルメ"
+    var settingArray = try! Realm().objects(SaveSetting.self)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,8 +53,12 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        settingArray = try! Realm().objects(SaveSetting.self)
         tableView.reloadData()
+    }
+    
+    func callBack(){
+        updateShopArray()
     }
     
     func updateShopArray(appendLoad: Bool = false) {
@@ -76,7 +84,23 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             "key": apiKey,
             "start": startIndex,
             "count": 20,
-            "keyword": "ランチ",
+            "keyword": keyWord,
+            "wifi": ((settingArray.first?.isWifi) != nil) ? 0 : 1,
+            "parking": ((settingArray.first?.isParking) != nil) ? 0 : 1,
+            "private_room": ((settingArray.first?.isPrivateRoom) != nil) ? 0 : 1,
+            "non_smoking": ((settingArray.first?.isNonSmoking) != nil) ? 0 : 1,
+            "barrier_free": ((settingArray.first?.isBarrierFree) != nil) ? 0 : 1,
+//            "tatami": ((settingArray.first?.isTatami) != nil) ? 1 : 0,
+//            "horigotatsu": ((settingArray.first?.isHorigotatsu) != nil) ? 1 : 0,
+//            "free_drink": ((settingArray.first?.isFreeDrink) != nil) ? 1 : 0,
+//            "free_food": ((settingArray.first?.isFreeFood) != nil) ? 1 : 0,
+//            "course": ((settingArray.first?.isCourse) != nil) ? 1 : 0,
+//            "lunch": ((settingArray.first?.isLunch) != nil) ? 1 : 0,
+//            "shochu": ((settingArray.first?.isShochu) != nil) ? 1 : 0,
+//            "cocktail": ((settingArray.first?.isCocktail) != nil) ? 1 : 0,
+//            "wine": ((settingArray.first?.isWine) != nil) ? 1 : 0,
+//            "sake": ((settingArray.first?.isSake) != nil) ? 1 : 0,
+//            "pet": ((settingArray.first?.isPet) != nil) ? 1 : 0,
             "format": "json"
         ]
         AF.request("https://webservice.recruit.co.jp/hotpepper/gourmet/v1/", method: .get, parameters: parameters).responseDecodable(of: ApiResponse.self) { response in
@@ -103,6 +127,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 if apiResponse.results.shop.count == 0 {
                     self.isLastLoaded = true
                 }
+                self.statusLabel.text = ""
             case .failure(let error):
                 print(error)
                 self.shopArray = []
@@ -177,7 +202,25 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
         tableView.reloadData()
     }
+
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar){
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        if let keyWordText = searchBar.text{
+            keyWord = keyWordText
+        }
+        updateShopArray()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchBar.setShowsCancelButton(false, animated: true)
+        keyWord = "グルメ"
+        updateShopArray()
+    }
 
     /*
     // MARK: - Navigation
