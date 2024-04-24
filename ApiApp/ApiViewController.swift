@@ -11,7 +11,7 @@ import AlamofireImage
 import RealmSwift
 import SafariServices
 
-class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UIAdaptivePresentationControllerDelegate {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -57,11 +57,9 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.reloadData()
     }
     
-    func callBack(){
-        updateShopArray()
-    }
-    
     func updateShopArray(appendLoad: Bool = false) {
+        settingArray = try! Realm().objects(SaveSetting.self)
+        let settingFirst = settingArray.first ?? SaveSetting()
         // 現在読み込み中なら読み込みを開始しない
         if isLoading {
             return
@@ -79,28 +77,28 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
         // 読み込み中状態開始
         isLoading = true
-        
+        //print(settingFirst.isWifi ? 1 : 0)
         let parameters: [String: Any] = [
             "key": apiKey,
             "start": startIndex,
             "count": 20,
             "keyword": keyWord,
-            "wifi": ((settingArray.first?.isWifi) != nil) ? 0 : 1,
-            "parking": ((settingArray.first?.isParking) != nil) ? 0 : 1,
-            "private_room": ((settingArray.first?.isPrivateRoom) != nil) ? 0 : 1,
-            "non_smoking": ((settingArray.first?.isNonSmoking) != nil) ? 0 : 1,
-            "barrier_free": ((settingArray.first?.isBarrierFree) != nil) ? 0 : 1,
-//            "tatami": ((settingArray.first?.isTatami) != nil) ? 1 : 0,
-//            "horigotatsu": ((settingArray.first?.isHorigotatsu) != nil) ? 1 : 0,
-//            "free_drink": ((settingArray.first?.isFreeDrink) != nil) ? 1 : 0,
-//            "free_food": ((settingArray.first?.isFreeFood) != nil) ? 1 : 0,
-//            "course": ((settingArray.first?.isCourse) != nil) ? 1 : 0,
-//            "lunch": ((settingArray.first?.isLunch) != nil) ? 1 : 0,
-//            "shochu": ((settingArray.first?.isShochu) != nil) ? 1 : 0,
-//            "cocktail": ((settingArray.first?.isCocktail) != nil) ? 1 : 0,
-//            "wine": ((settingArray.first?.isWine) != nil) ? 1 : 0,
-//            "sake": ((settingArray.first?.isSake) != nil) ? 1 : 0,
-//            "pet": ((settingArray.first?.isPet) != nil) ? 1 : 0,
+            "wifi": settingFirst.isWifi ? 1 : 0,
+            "parking": settingFirst.isParking ? 1 : 0,
+            "private_room": settingFirst.isPrivateRoom ? 1 : 0,
+            "non_smoking": settingFirst.isNonSmoking ? 1 : 0,
+            "barrier_free": settingFirst.isBarrierFree ? 1 : 0,
+            "tatami": settingFirst.isTatami ? 1 : 0,
+            "horigotatsu": settingFirst.isHorigotatsu ? 1 : 0,
+            "free_drink": settingFirst.isFreeDrink ? 1 : 0,
+            "free_food": settingFirst.isFreeFood ? 1 : 0,
+            "course": settingFirst.isCourse ? 1 : 0,
+            "lunch": settingFirst.isLunch ? 1 : 0,
+            "shochu": settingFirst.isShochu ? 1 : 0,
+            "cocktail": settingFirst.isCocktail ? 1 : 0,
+            "wine": settingFirst.isWine ? 1 : 0,
+            "sake": settingFirst.isSake ? 1 : 0,
+            "pet": settingFirst.isPet ? 1 : 0,
             "format": "json"
         ]
         AF.request("https://webservice.recruit.co.jp/hotpepper/gourmet/v1/", method: .get, parameters: parameters).responseDecodable(of: ApiResponse.self) { response in
@@ -139,7 +137,12 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(shopArray.count)
         return shopArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150.0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -148,6 +151,9 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         let url = URL(string: shop.logo_image)!
         cell.logoImageView.af.setImage(withURL: url)
         cell.shopNameLabel.text = shop.name
+        cell.addressLabel.numberOfLines = 0
+        cell.addressLabel.text = shop.address
+        cell.addressLabel.lineBreakMode = .byWordWrapping
         
         let starImageName = shop.isFavorite ? "star.fill" : "star"
         let starImage = UIImage(systemName: starImageName)?.withRenderingMode(.alwaysOriginal)
@@ -202,7 +208,14 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
         tableView.reloadData()
     }
-
+    
+    @IBAction func settingButton(_ sender: UIButton) {
+        let storyboard: UIStoryboard = self.storyboard!
+        let settingView = storyboard.instantiateViewController(withIdentifier: "Setting")
+        settingView.presentationController?.delegate = self
+        self.present(settingView, animated: true, completion: nil)
+    }
+    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar){
         searchBar.setShowsCancelButton(true, animated: true)
     }
@@ -214,11 +227,14 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
         updateShopArray()
     }
-    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchBar.setShowsCancelButton(false, animated: true)
         keyWord = "グルメ"
+        updateShopArray()
+    }
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         updateShopArray()
     }
 
