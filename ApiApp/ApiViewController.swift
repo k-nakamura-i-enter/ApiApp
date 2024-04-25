@@ -168,16 +168,36 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         let shop = shopArray[indexPath.row]
-        let urlString: String
-        if shop.coupon_urls.sp == "" {
-            urlString = shop.coupon_urls.pc
-        } else {
-            urlString = shop.coupon_urls.sp
-        }
-        let url = URL(string: urlString)!
-        let safariViewController = SFSafariViewController(url: url)
-        safariViewController.modalPresentationStyle = .pageSheet
-        present(safariViewController, animated: true)
+//        let urlString: String
+//        if shop.coupon_urls.sp == "" {
+//            urlString = shop.coupon_urls.pc
+//        } else {
+//            urlString = shop.coupon_urls.sp
+//        }
+//        let url = URL(string: urlString)!
+//        let safariViewController = SFSafariViewController(url: url)
+//        safariViewController.modalPresentationStyle = .pageSheet
+//        present(safariViewController, animated: true)
+        
+        let shopDetailView = self.storyboard?.instantiateViewController(withIdentifier: "ShopDetail") as! ShopDetailViewController
+        shopDetailView.shopName = shop.name
+        shopDetailView.shopLogoImage = shop.logo_image
+        shopDetailView.shopAddress = shop.address
+        shopDetailView.shopStationName = shop.station_name
+        shopDetailView.shopAccess = shop.access
+        shopDetailView.shopWifi = shop.wifi
+        shopDetailView.shopCourse = shop.course
+        shopDetailView.shopFreeDrink = shop.free_drink
+        shopDetailView.shopFreeFood = shop.free_food
+        shopDetailView.shopPrivateRoom = shop.private_room
+        shopDetailView.shopHorigotatsu = shop.horigotatsu
+        shopDetailView.shopTatami = shop.tatami
+        shopDetailView.shopNonSmoking = shop.non_smoking
+        shopDetailView.shopParking = shop.parking
+        shopDetailView.shopBarrierFree = shop.barrier_free
+        shopDetailView.shopPet = shop.pet
+        shopDetailView.shopLunch = shop.lunch
+        self.navigationController?.pushViewController(shopDetailView, animated: true)
     }
     
     @IBAction func tapFavoriteButton(_ sender: UIButton) {
@@ -191,13 +211,15 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 let favoriteShop = realm.object(ofType: FavoriteShop.self, forPrimaryKey: shop.id)!
                 realm.delete(favoriteShop)
             }
-        } else {
+        } 
+        else {
             print("「\(shop.name)」をお気に入りに追加します")
             try! realm.write {
                 let favoriteShop = FavoriteShop()
                 favoriteShop.id = shop.id
                 favoriteShop.name = shop.name
                 favoriteShop.logoImageURL = shop.logo_image
+                favoriteShop.address = shop.address
                 if shop.coupon_urls.sp == "" {
                     favoriteShop.couponURL = shop.coupon_urls.pc
                 } else {

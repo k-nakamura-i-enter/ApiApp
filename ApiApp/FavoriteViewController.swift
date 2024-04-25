@@ -39,6 +39,10 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return favoriteArray.count
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150.0
+    }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ShopCell
@@ -46,6 +50,9 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
         let url = URL(string: favoriteShop.logoImageURL)!
         cell.logoImageView.af.setImage(withURL: url)
         cell.shopNameLabel.text = favoriteShop.name
+        cell.addressLabel.numberOfLines = 0
+        cell.addressLabel.text = favoriteShop.address
+        cell.addressLabel.lineBreakMode = .byWordWrapping
 
         return cell
     }

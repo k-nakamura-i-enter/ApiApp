@@ -10,12 +10,27 @@ import RealmSwift
 struct ApiResponse: Decodable {
     var results: Result
     struct Result: Decodable {
+        var results_available: Int
         var shop: [Shop]
         struct Shop: Decodable {
             var id: String
             var name: String
             var logo_image: String
             var address: String
+            var station_name: String
+            var access: String
+            var wifi: String
+            var course: String
+            var free_drink: String
+            var free_food: String
+            var private_room: String
+            var horigotatsu: String
+            var tatami: String
+            var non_smoking: String
+            var parking: String
+            var barrier_free: String
+            var pet: String
+            var lunch: String
             var coupon_urls: CouponUrls
             struct CouponUrls: Decodable {
                 var pc: String

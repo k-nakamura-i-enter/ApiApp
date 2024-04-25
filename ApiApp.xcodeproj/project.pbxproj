@@ -20,6 +20,7 @@
 		CF1972982BD62FFD00D2404F /* ShopCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1972972BD62FFD00D2404F /* ShopCell.swift */; };
 		CF19729A2BD64C3800D2404F /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1972992BD64C3800D2404F /* ApiResponse.swift */; };
 		CF6072642BD7861D008BF483 /* SaveSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6072632BD7861D008BF483 /* SaveSetting.swift */; };
+		CF7AB7A42BD8EA5F0008A62C /* ShopDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7AB7A32BD8EA5F0008A62C /* ShopDetailViewController.swift */; };
 		CFEE74942BD736D600796272 /* FavoriteShop.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEE74932BD736D600796272 /* FavoriteShop.swift */; };
 		CFEE74962BD749B500796272 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEE74952BD749B500796272 /* SearchViewController.swift */; };
 /* End PBXBuildFile section */
@@ -42,6 +43,7 @@
 		CF1972972BD62FFD00D2404F /* ShopCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopCell.swift; sourceTree = "<group>"; };
 		CF1972992BD64C3800D2404F /* ApiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
 		CF6072632BD7861D008BF483 /* SaveSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveSetting.swift; sourceTree = "<group>"; };
+		CF7AB7A32BD8EA5F0008A62C /* ShopDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopDetailViewController.swift; sourceTree = "<group>"; };
 		CFEE74932BD736D600796272 /* FavoriteShop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteShop.swift; sourceTree = "<group>"; };
 		CFEE74952BD749B500796272 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,6 +103,7 @@
 				CF1972812BD619A500D2404F /* ViewController.swift */,
 				CF1972912BD61EA700D2404F /* ApiViewController.swift */,
 				CF1972932BD61FE800D2404F /* FavoriteViewController.swift */,
+				CF7AB7A32BD8EA5F0008A62C /* ShopDetailViewController.swift */,
 				CFEE74932BD736D600796272 /* FavoriteShop.swift */,
 				CF1972972BD62FFD00D2404F /* ShopCell.swift */,
 				CF1972992BD64C3800D2404F /* ApiResponse.swift */,
@@ -235,6 +238,7 @@
 				CF1972982BD62FFD00D2404F /* ShopCell.swift in Sources */,
 				CF19727E2BD619A500D2404F /* AppDelegate.swift in Sources */,
 				CFEE74962BD749B500796272 /* SearchViewController.swift in Sources */,
+				CF7AB7A42BD8EA5F0008A62C /* ShopDetailViewController.swift in Sources */,
 				CF19729A2BD64C3800D2404F /* ApiResponse.swift in Sources */,
 				CF1972942BD61FE800D2404F /* FavoriteViewController.swift in Sources */,
 				CF1972802BD619A500D2404F /* SceneDelegate.swift in Sources */,
