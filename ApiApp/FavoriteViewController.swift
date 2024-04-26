@@ -23,6 +23,7 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(UINib(nibName: "ShopCell", bundle: nil), forCellReuseIdentifier: "ShopCell")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,14 +46,9 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ShopCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ShopCell", for: indexPath) as! ShopCell
         let favoriteShop = favoriteArray[indexPath.row]
-        let url = URL(string: favoriteShop.logoImageURL)!
-        cell.logoImageView.af.setImage(withURL: url)
-        cell.shopNameLabel.text = favoriteShop.name
-        cell.addressLabel.numberOfLines = 0
-        cell.addressLabel.text = favoriteShop.address
-        cell.addressLabel.lineBreakMode = .byWordWrapping
+        cell.setCell(favoriteShop: favoriteShop)
 
         return cell
     }

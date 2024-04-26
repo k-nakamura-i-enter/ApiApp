@@ -29,8 +29,9 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.delegate = self
         tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(UINib(nibName: "ShopCell", bundle: nil), forCellReuseIdentifier: "ShopCell")
 
         // APIキー読み込み
         let filePath = Bundle.main.path(forResource: "ApiKey", ofType:"plist" )
@@ -146,18 +147,10 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ShopCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ShopCell", for: indexPath) as! ShopCell
         let shop = shopArray[indexPath.row]
-        let url = URL(string: shop.logo_image)!
-        cell.logoImageView.af.setImage(withURL: url)
-        cell.shopNameLabel.text = shop.name
-        cell.addressLabel.numberOfLines = 0
-        cell.addressLabel.text = shop.address
-        cell.addressLabel.lineBreakMode = .byWordWrapping
-        
-        let starImageName = shop.isFavorite ? "star.fill" : "star"
-        let starImage = UIImage(systemName: starImageName)?.withRenderingMode(.alwaysOriginal)
-        cell.favoriteButton.setImage(starImage, for: .normal)
+        // セルの設定
+        cell.setCell(shop: shop)
         
         if shopArray.count - indexPath.row < 10 {
             self.updateShopArray(appendLoad: true)
@@ -218,7 +211,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 let favoriteShop = FavoriteShop()
                 favoriteShop.id = shop.id
                 favoriteShop.name = shop.name
-                favoriteShop.logoImageURL = shop.logo_image
+                favoriteShop.logo_image = shop.logo_image
                 favoriteShop.address = shop.address
                 if shop.coupon_urls.sp == "" {
                     favoriteShop.couponURL = shop.coupon_urls.pc
