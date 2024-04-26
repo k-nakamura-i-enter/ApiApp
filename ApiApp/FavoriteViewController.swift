@@ -48,7 +48,7 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ShopCell", for: indexPath) as! ShopCell
         let favoriteShop = favoriteArray[indexPath.row]
-        cell.setCell(favoriteShop: favoriteShop)
+        cell.setCell(shopLogoImege: favoriteShop.logo_image, shopName: favoriteShop.name, shopAddress: favoriteShop.address)
 
         return cell
     }

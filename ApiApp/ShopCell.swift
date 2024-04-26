@@ -18,34 +18,16 @@ class ShopCell: UITableViewCell {
         // Initialization code
         
     }
-    
-    func setCell(shop: ApiResponse.Result.Shop){
-        let url = URL(string: shop.logo_image)!
+    // API通信セル
+    func setCell(shopLogoImege: String, shopName: String, shopAddress: String){
+        let url = URL(string: shopLogoImege)!
         self.logoImageView.af.setImage(withURL: url)
-        self.shopNameLabel.text = shop.name
+        self.shopNameLabel.text = shopName
         self.addressLabel.numberOfLines = 0
-        self.addressLabel.text = shop.address
+        self.addressLabel.text = shopAddress
         self.addressLabel.lineBreakMode = .byWordWrapping
-        // 星アイコンの設定
-        self.favoriteButton.setImage(setStar(shop.isFavorite), for: .normal)
+        
     }
-    
-    func setCell(favoriteShop: FavoriteShop){
-        let url = URL(string: favoriteShop.logo_image)!
-        self.logoImageView.af.setImage(withURL: url)
-        self.shopNameLabel.text = favoriteShop.name
-        self.addressLabel.numberOfLines = 0
-        self.addressLabel.text = favoriteShop.address
-        self.addressLabel.lineBreakMode = .byWordWrapping
-    }
-    
-    func setStar(_ isFavorite: Bool) -> UIImage{
-        let starImageName = isFavorite ? "star.fill" : "star"
-        let starImage = (UIImage(systemName: starImageName)?.withRenderingMode(.alwaysOriginal))!
-        return starImage
-    }
-    
-    
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -53,4 +35,7 @@ class ShopCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    @IBAction func tapFavoriteButton(_ sender: UIButton) {
+        
+    }
 }

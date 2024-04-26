@@ -150,7 +150,9 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         let cell = tableView.dequeueReusableCell(withIdentifier: "ShopCell", for: indexPath) as! ShopCell
         let shop = shopArray[indexPath.row]
         // セルの設定
-        cell.setCell(shop: shop)
+        cell.setCell(shopLogoImege: shop.logo_image, shopName: shop.name, shopAddress: shop.address)
+        // 星アイコンの設定
+        cell.favoriteButton.setImage(setStar(shop.isFavorite), for: .normal)
         
         if shopArray.count - indexPath.row < 10 {
             self.updateShopArray(appendLoad: true)
@@ -251,6 +253,12 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         updateShopArray()
+    }
+    
+    func setStar(_ isFavorite: Bool) -> UIImage{
+        let starImageName = isFavorite ? "star.fill" : "star"
+        let starImage = (UIImage(systemName: starImageName)?.withRenderingMode(.alwaysOriginal))!
+        return starImage
     }
 
     /*
