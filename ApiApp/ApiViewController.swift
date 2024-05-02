@@ -11,7 +11,7 @@ import AlamofireImage
 import RealmSwift
 import SafariServices
 
-class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UIAdaptivePresentationControllerDelegate {
+class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UIAdaptivePresentationControllerDelegate, ShopCellDelegate {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -24,7 +24,6 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     var isLoading = false
     var isLastLoaded = false
     
-    var keyWord: String = "グルメ"
     var settingArray = try! Realm().objects(SaveSetting.self)
     
     override func viewDidLoad() {
@@ -58,7 +57,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.reloadData()
     }
     
-    func updateShopArray(appendLoad: Bool = false) {
+    func updateShopArray(appendLoad: Bool = false, keyWord: String = "グルメ") {
         settingArray = try! Realm().objects(SaveSetting.self)
         let settingFirst = settingArray.first ?? SaveSetting()
         // 現在読み込み中なら読み込みを開始しない
@@ -78,28 +77,31 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
         // 読み込み中状態開始
         isLoading = true
-        //print(settingFirst.isWifi ? 1 : 0)
+        print(settingFirst.isCourse ? 1 : 0)
         let parameters: [String: Any] = [
             "key": apiKey,
             "start": startIndex,
             "count": 20,
             "keyword": keyWord,
-            "wifi": settingFirst.isWifi ? 1 : 0,
-            "parking": settingFirst.isParking ? 1 : 0,
-            "private_room": settingFirst.isPrivateRoom ? 1 : 0,
-            "non_smoking": settingFirst.isNonSmoking ? 1 : 0,
-            "barrier_free": settingFirst.isBarrierFree ? 1 : 0,
-            "tatami": settingFirst.isTatami ? 1 : 0,
-            "horigotatsu": settingFirst.isHorigotatsu ? 1 : 0,
-            "free_drink": settingFirst.isFreeDrink ? 1 : 0,
-            "free_food": settingFirst.isFreeFood ? 1 : 0,
-            "course": settingFirst.isCourse ? 1 : 0,
-            "lunch": settingFirst.isLunch ? 1 : 0,
-            "shochu": settingFirst.isShochu ? 1 : 0,
-            "cocktail": settingFirst.isCocktail ? 1 : 0,
-            "wine": settingFirst.isWine ? 1 : 0,
-            "sake": settingFirst.isSake ? 1 : 0,
-            "pet": settingFirst.isPet ? 1 : 0,
+            "large_area": settingFirst.largeArea,
+            "genre": settingFirst.genre,
+            "budget": settingFirst.budget,
+            "wifi": String(settingFirst.isWifi ? 1 : 0),
+            "parking": String(settingFirst.isParking ? 1 : 0),
+            "private_room": String(settingFirst.isPrivateRoom ? 1 : 0),
+            "non_smoking": String(settingFirst.isNonSmoking ? 1 : 0),
+            "barrier_free": String(settingFirst.isBarrierFree ? 1 : 0),
+            "tatami": String(settingFirst.isTatami ? 1 : 0),
+            "horigotatsu": String(settingFirst.isHorigotatsu ? 1 : 0),
+            "course": String(settingFirst.isCourse ? 1 : 0),
+            "free_drink": String(settingFirst.isFreeDrink ? 1 : 0),
+            "free_food": String(settingFirst.isFreeFood ? 1 : 0),
+            "lunch": String(settingFirst.isLunch ? 1 : 0),
+            "shochu": String(settingFirst.isShochu ? 1 : 0),
+            "cocktail": String(settingFirst.isCocktail ? 1 : 0),
+            "wine": String(settingFirst.isWine ? 1 : 0),
+            "sake": String(settingFirst.isSake ? 1 : 0),
+            "pet": String(settingFirst.isPet ? 1 : 0),
             "format": "json"
         ]
         AF.request("https://webservice.recruit.co.jp/hotpepper/gourmet/v1/", method: .get, parameters: parameters).responseDecodable(of: ApiResponse.self) { response in
@@ -131,7 +133,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 print(error)
                 self.shopArray = []
                 self.isLastLoaded = true
-                self.statusLabel.text = "データの取得が失敗しました"
+                self.statusLabel.text = "一致する情報は見つかりませんでした"
             }
             self.tableView.reloadData()
         }
@@ -148,6 +150,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ShopCell", for: indexPath) as! ShopCell
+        cell.delegate = self
         let shop = shopArray[indexPath.row]
         // セルの設定
         cell.setCell(shopLogoImege: shop.logo_image, shopName: shop.name, shopAddress: shop.address)
@@ -195,8 +198,8 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         self.navigationController?.pushViewController(shopDetailView, animated: true)
     }
     
-    @IBAction func tapFavoriteButton(_ sender: UIButton) {
-        let point = sender.convert(CGPoint.zero, to: tableView)
+    func shopCellDelegateTapFavoriteButton(favoriteButton: UIButton) {
+        let point = favoriteButton.convert(CGPoint.zero, to: tableView)
         let indexPath = tableView.indexPathForRow(at: point)!
         let shop = shopArray[indexPath.row]
 
@@ -206,7 +209,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 let favoriteShop = realm.object(ofType: FavoriteShop.self, forPrimaryKey: shop.id)!
                 realm.delete(favoriteShop)
             }
-        } 
+        }
         else {
             print("「\(shop.name)」をお気に入りに追加します")
             try! realm.write {
@@ -238,17 +241,13 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
-        if let keyWordText = searchBar.text{
-            keyWord = keyWordText
-        }
-        updateShopArray()
+        updateShopArray(keyWord: searchBar.text ?? "")
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = nil
         searchBar.resignFirstResponder()
         searchBar.setShowsCancelButton(false, animated: true)
-        keyWord = "グルメ"
-        updateShopArray()
+        updateShopArray(keyWord: "グルメ")
     }
     
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {

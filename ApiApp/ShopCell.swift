@@ -7,16 +7,19 @@
 
 import UIKit
 
+protocol ShopCellDelegate: AnyObject{
+    func shopCellDelegateTapFavoriteButton(favoriteButton: UIButton)
+}
+
 class ShopCell: UITableViewCell {
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var shopNameLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!
+    weak var delegate: ShopCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-        
     }
     // API通信セル
     func setCell(shopLogoImege: String, shopName: String, shopAddress: String){
@@ -31,11 +34,11 @@ class ShopCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
     
     @IBAction func tapFavoriteButton(_ sender: UIButton) {
-        
+        delegate?.shopCellDelegateTapFavoriteButton(favoriteButton: sender)
+        print("delegateは\(String(describing: delegate))です")
     }
 }

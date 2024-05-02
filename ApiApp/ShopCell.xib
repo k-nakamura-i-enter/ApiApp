@@ -29,7 +29,7 @@
                             <imageReference key="image" image="star.fill" catalog="system" symbolScale="large" renderingMode="original"/>
                         </state>
                         <connections>
-                            <action selector="tapFavoriteButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="cBD-62-qV8"/>
+                            <action selector="tapFavoriteButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="hec-bi-98R"/>
                         </connections>
                     </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2u6-YO-ZLt">

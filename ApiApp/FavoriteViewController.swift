@@ -10,7 +10,7 @@ import RealmSwift
 import AlamofireImage
 import SafariServices
 
-class FavoriteViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FavoriteViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ShopCellDelegate {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
@@ -47,6 +47,7 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ShopCell", for: indexPath) as! ShopCell
+        cell.delegate = self
         let favoriteShop = favoriteArray[indexPath.row]
         cell.setCell(shopLogoImege: favoriteShop.logo_image, shopName: favoriteShop.name, shopAddress: favoriteShop.address)
 
@@ -62,8 +63,8 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
         present(safariViewController, animated: true)
     }
     
-    @IBAction func tapFavoriteButton(_ sender: UIButton) {
-        let point = sender.convert(CGPoint.zero, to: tableView)
+    func shopCellDelegateTapFavoriteButton(favoriteButton: UIButton) {
+        let point = favoriteButton.convert(CGPoint.zero, to: tableView)
         let indexPath = tableView.indexPathForRow(at: point)!
         let favoriteShop = favoriteArray[indexPath.row]
 

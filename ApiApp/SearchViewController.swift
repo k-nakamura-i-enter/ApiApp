@@ -8,7 +8,10 @@
 import UIKit
 import RealmSwift
 
-class SearchViewController: UIViewController {
+class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    @IBOutlet weak var prefecturesPicker: UIPickerView!
+    @IBOutlet weak var genrePicker: UIPickerView!
+    @IBOutlet weak var pricePicker: UIPickerView!
     @IBOutlet weak var wifiSwitch: UISwitch!
     @IBOutlet weak var parkingSwitch: UISwitch!
     @IBOutlet weak var privateRoomSwitch: UISwitch!
@@ -27,11 +30,25 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var petSwitch: UISwitch!
     
     let realm = try! Realm()
+    let pickerSet = PickerSet()
     let SettingArray = try! Realm().objects(SaveSetting.self)
+    var largeAreaRow: Int?
+    var genreRow: Int?
+    var budgetRow: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        prefecturesPicker.delegate = self
+        prefecturesPicker.dataSource = self
+        genrePicker.delegate = self
+        genrePicker.dataSource = self
+        pricePicker.delegate = self
+        pricePicker.dataSource = self
+        
         if let saveSetting = SettingArray.first{
+            prefecturesPicker.selectRow(saveSetting.largeAreaRow, inComponent: 0, animated: true)
+            genrePicker.selectRow(saveSetting.genreRow, inComponent: 0, animated: true)
+            pricePicker.selectRow(saveSetting.budgetRow, inComponent: 0, animated: true)
             wifiSwitch.isOn = saveSetting.isWifi
             parkingSwitch.isOn = saveSetting.isParking
             privateRoomSwitch.isOn = saveSetting.isPrivateRoom
@@ -49,6 +66,7 @@ class SearchViewController: UIViewController {
             sakeSwitch.isOn = saveSetting.isSake
             petSwitch.isOn = saveSetting.isPet
         }
+
     }
     
     @IBAction func closeEvent(_ sender: UIButton) {
@@ -105,6 +123,51 @@ class SearchViewController: UIViewController {
             return
         }
         presentationController.delegate?.presentationControllerDidDismiss?(presentationController)
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        switch pickerView {
+        case prefecturesPicker:
+            return pickerSet.largeArea.count
+        case genrePicker:
+            return pickerSet.genre.count
+        case pricePicker:
+            return pickerSet.budget.count
+        default:
+            return 1
+        }
+        
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        switch pickerView {
+        case prefecturesPicker:
+            return pickerSet.largeArea[row].value
+        case genrePicker:
+            return pickerSet.genre[row].value
+        case pricePicker:
+            return pickerSet.budget[row].value
+        default:
+            return "データの取得に失敗しました"
+        }
+        
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        switch pickerView {
+        case prefecturesPicker:
+            self.largeAreaRow = row
+        case genrePicker:
+            self.genreRow = row
+        case pricePicker:
+            self.budgetRow = row
+        default:
+            throw
+        }
     }
     
     /*

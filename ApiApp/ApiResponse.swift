@@ -18,6 +18,9 @@ struct ApiResponse: Decodable {
             var logo_image: String
             var address: String
             var station_name: String
+            var large_area: LargeArea
+            var genre: Genre
+            var budget: Budget
             var access: String
             var wifi: String
             var course: String
@@ -35,6 +38,18 @@ struct ApiResponse: Decodable {
             struct CouponUrls: Decodable {
                 var pc: String
                 var sp: String
+            }
+            struct LargeArea: Decodable {
+                var code: String
+                var name: String
+            }
+            struct Genre: Decodable{
+                var code: String
+                var name: String
+            }
+            struct Budget: Decodable {
+                var code: String
+                var name: String
             }
             var isFavorite: Bool {
                 if try! Realm().object(ofType: FavoriteShop.self, forPrimaryKey: self.id) != nil {
