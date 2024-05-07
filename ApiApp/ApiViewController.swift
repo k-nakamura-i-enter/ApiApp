@@ -16,6 +16,13 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    //searchBar 切り替え
+    let keyframes:[Double] = [0.0, 0.4, 3.4, 3.8]
+    var animationStartDate = Date()
+    var placeHolderOpcity:Double = 1
+
+    var currentPlaceholder = 0
+    
     let realm = try! Realm()
     
     var shopArray: [ApiResponse.Result.Shop] = []
@@ -25,12 +32,20 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     var isLastLoaded = false
     
     var settingArray = try! Realm().objects(SaveSetting.self)
+    var placeholders = ["焼肉 食べ放題", "名古屋 居酒屋 宴会","札幌 ジンギスカン","福岡 ラーメン","女子会 スイーツ"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "ShopCell", bundle: nil), forCellReuseIdentifier: "ShopCell")
+        
+        view.addSubview(searchBar)
+        searchBar.frame = view.frame
+        let displayLink = CADisplayLink(target: self, selector: #selector(handleUpdate))
+        displayLink.add(to: .main, forMode: .default)
+        
+        self.placeholders = self.placeholders.shuffled()
 
         // APIキー読み込み
         let filePath = Bundle.main.path(forResource: "ApiKey", ofType:"plist" )
@@ -57,9 +72,11 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.reloadData()
     }
     
-    func updateShopArray(appendLoad: Bool = false, keyWord: String = "グルメ") {
+    func updateShopArray(appendLoad: Bool = false, keyWord: String = "0") {
         settingArray = try! Realm().objects(SaveSetting.self)
         let settingFirst = settingArray.first ?? SaveSetting()
+        let pickerSet = PickerSet()
+        
         // 現在読み込み中なら読み込みを開始しない
         if isLoading {
             return
@@ -75,17 +92,21 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         } else {
             startIndex = 1
         }
+        
+        //読み込み数
+        let indexCount: Int = 20
+        
         // 読み込み中状態開始
         isLoading = true
         print(settingFirst.isCourse ? 1 : 0)
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "key": apiKey,
             "start": startIndex,
-            "count": 20,
+            "count": indexCount,
             "keyword": keyWord,
-            "large_area": settingFirst.largeArea,
-            "genre": settingFirst.genre,
-            "budget": settingFirst.budget,
+            "large_area": String(pickerSet.largeArea[settingFirst.largeAreaRow].key),
+            "genre": String(pickerSet.genre[settingFirst.genreRow].key),
+            "budget": String(pickerSet.budget[settingFirst.budgetRow].key),
             "wifi": String(settingFirst.isWifi ? 1 : 0),
             "parking": String(settingFirst.isParking ? 1 : 0),
             "private_room": String(settingFirst.isPrivateRoom ? 1 : 0),
@@ -104,6 +125,9 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             "pet": String(settingFirst.isPet ? 1 : 0),
             "format": "json"
         ]
+        
+        parameters = parameters.filter { $0.value as? String != "0" }
+        
         AF.request("https://webservice.recruit.co.jp/hotpepper/gourmet/v1/", method: .get, parameters: parameters).responseDecodable(of: ApiResponse.self) { response in
             // 読み込み中状態終了
             self.isLoading = false
@@ -166,16 +190,6 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         let shop = shopArray[indexPath.row]
-//        let urlString: String
-//        if shop.coupon_urls.sp == "" {
-//            urlString = shop.coupon_urls.pc
-//        } else {
-//            urlString = shop.coupon_urls.sp
-//        }
-//        let url = URL(string: urlString)!
-//        let safariViewController = SFSafariViewController(url: url)
-//        safariViewController.modalPresentationStyle = .pageSheet
-//        present(safariViewController, animated: true)
         
         let shopDetailView = self.storyboard?.instantiateViewController(withIdentifier: "ShopDetail") as! ShopDetailViewController
         shopDetailView.shopName = shop.name
@@ -218,10 +232,24 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 favoriteShop.name = shop.name
                 favoriteShop.logo_image = shop.logo_image
                 favoriteShop.address = shop.address
+                favoriteShop.station_name = shop.station_name
+                favoriteShop.access = shop.access
+                favoriteShop.wifi = shop.wifi
+                favoriteShop.course = shop.course
+                favoriteShop.free_drink = shop.free_drink
+                favoriteShop.free_food = shop.free_food
+                favoriteShop.private_room = shop.private_room
+                favoriteShop.horigotatsu = shop.horigotatsu
+                favoriteShop.tatami = shop.tatami
+                favoriteShop.non_smoking = shop.non_smoking
+                favoriteShop.parking = shop.parking
+                favoriteShop.barrier_free = shop.barrier_free
+                favoriteShop.pet = shop.pet
+                favoriteShop.lunch = shop.lunch
                 if shop.coupon_urls.sp == "" {
-                    favoriteShop.couponURL = shop.coupon_urls.pc
+                    favoriteShop.coupon_urls = shop.coupon_urls.pc
                 } else {
-                    favoriteShop.couponURL = shop.coupon_urls.sp
+                    favoriteShop.coupon_urls = shop.coupon_urls.sp
                 }
                 realm.add(favoriteShop)
             }
@@ -243,11 +271,12 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         updateShopArray(keyWord: searchBar.text ?? "")
     }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = nil
         searchBar.resignFirstResponder()
         searchBar.setShowsCancelButton(false, animated: true)
-        updateShopArray(keyWord: "グルメ")
+        updateShopArray(keyWord: "0")
     }
     
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
@@ -258,6 +287,45 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         let starImageName = isFavorite ? "star.fill" : "star"
         let starImage = (UIImage(systemName: starImageName)?.withRenderingMode(.alwaysOriginal))!
         return starImage
+    }
+    
+    func setPlaceholderTextAndOpacity(opacity:Double, text:String) {
+        searchBar.searchTextField.attributedPlaceholder = NSAttributedString( string: text, attributes: [NSAttributedString.Key.foregroundColor : UIColor.init(white: 0.6, alpha: CGFloat(opacity))])
+    }
+
+    @objc func handleUpdate() {
+
+        let now = Date()
+        let elapsedTime = now.timeIntervalSince(animationStartDate)
+
+        switch elapsedTime {
+            case 0 ..< keyframes[1]:
+                let animationDuration = keyframes[1] - keyframes[0]
+                let percentage:Double = elapsedTime / animationDuration
+                placeHolderOpcity = percentage
+                setPlaceholderTextAndOpacity(opacity: placeHolderOpcity, text: placeholders[currentPlaceholder])
+
+            case keyframes[1] ..< keyframes[2]:
+                //keyframe 1
+                placeHolderOpcity = 1
+                setPlaceholderTextAndOpacity(opacity: placeHolderOpcity, text: placeholders[currentPlaceholder])
+
+            case keyframes[2] ..< keyframes[3]:
+                let elapsedTimeInKeyframe = elapsedTime - keyframes[2]
+                let animationDuration = keyframes[3] - keyframes[2]
+                let percentage:Double = elapsedTimeInKeyframe / animationDuration
+                placeHolderOpcity = 1 - percentage
+                setPlaceholderTextAndOpacity(opacity: placeHolderOpcity, text: placeholders[currentPlaceholder])
+
+            default:
+                animationStartDate = Date()
+                if currentPlaceholder == placeholders.count - 1 {
+                    currentPlaceholder = 0
+                } else {
+                    currentPlaceholder += 1
+                }
+                setPlaceholderTextAndOpacity(opacity: 0, text: placeholders[currentPlaceholder])
+        }
     }
 
     /*

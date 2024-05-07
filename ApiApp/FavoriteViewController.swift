@@ -56,11 +56,27 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        let favoriteShop = favoriteArray[indexPath.row]
-        let url = URL(string: favoriteShop.couponURL)!
-        let safariViewController = SFSafariViewController(url: url)
-        safariViewController.modalPresentationStyle = .pageSheet
-        present(safariViewController, animated: true)
+        let shop = favoriteArray[indexPath.row]
+        
+        let shopDetailView = self.storyboard?.instantiateViewController(withIdentifier: "ShopDetail") as! ShopDetailViewController
+        shopDetailView.shopName = shop.name
+        shopDetailView.shopLogoImage = shop.logo_image
+        shopDetailView.shopAddress = shop.address
+        shopDetailView.shopStationName = shop.station_name
+        shopDetailView.shopAccess = shop.access
+        shopDetailView.shopWifi = shop.wifi
+        shopDetailView.shopCourse = shop.course
+        shopDetailView.shopFreeDrink = shop.free_drink
+        shopDetailView.shopFreeFood = shop.free_food
+        shopDetailView.shopPrivateRoom = shop.private_room
+        shopDetailView.shopHorigotatsu = shop.horigotatsu
+        shopDetailView.shopTatami = shop.tatami
+        shopDetailView.shopNonSmoking = shop.non_smoking
+        shopDetailView.shopParking = shop.parking
+        shopDetailView.shopBarrierFree = shop.barrier_free
+        shopDetailView.shopPet = shop.pet
+        shopDetailView.shopLunch = shop.lunch
+        self.navigationController?.pushViewController(shopDetailView, animated: true)
     }
     
     func shopCellDelegateTapFavoriteButton(favoriteButton: UIButton) {

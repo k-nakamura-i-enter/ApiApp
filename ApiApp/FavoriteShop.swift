@@ -18,9 +18,23 @@ class FavoriteShop: Object {
     @Persisted var logo_image = ""
 
     // クーポン画面URL
-    @Persisted var couponURL = ""
+    @Persisted var coupon_urls = ""
     
     //住所
     @Persisted var address = ""
-
+    
+    @Persisted var station_name = ""
+    @Persisted var access = ""
+    @Persisted var wifi = ""
+    @Persisted var course = ""
+    @Persisted var free_drink = ""
+    @Persisted var free_food = ""
+    @Persisted var private_room = ""
+    @Persisted var horigotatsu = ""
+    @Persisted var tatami = ""
+    @Persisted var non_smoking = ""
+    @Persisted var parking = ""
+    @Persisted var barrier_free = ""
+    @Persisted var pet = ""
+    @Persisted var lunch = ""
 }

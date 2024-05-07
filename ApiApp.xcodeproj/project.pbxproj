@@ -100,21 +100,21 @@
 		CF19727C2BD619A500D2404F /* ApiApp */ = {
 			isa = PBXGroup;
 			children = (
+				CF1972832BD619A500D2404F /* Main.storyboard */,
+				CF1972882BD619A600D2404F /* LaunchScreen.storyboard */,
+				CF773BA12BDB732400C9B15E /* ShopCell.xib */,
 				CF19727D2BD619A500D2404F /* AppDelegate.swift */,
 				CF19727F2BD619A500D2404F /* SceneDelegate.swift */,
 				CF1972812BD619A500D2404F /* ViewController.swift */,
 				CF1972912BD61EA700D2404F /* ApiViewController.swift */,
 				CF1972932BD61FE800D2404F /* FavoriteViewController.swift */,
 				CF7AB7A32BD8EA5F0008A62C /* ShopDetailViewController.swift */,
-				CFEE74932BD736D600796272 /* FavoriteShop.swift */,
+				CFEE74952BD749B500796272 /* SearchViewController.swift */,
 				CF1972992BD64C3800D2404F /* ApiResponse.swift */,
 				CF773BA02BDB732400C9B15E /* ShopCell.swift */,
-				CF773BA12BDB732400C9B15E /* ShopCell.xib */,
+				CFEE74932BD736D600796272 /* FavoriteShop.swift */,
 				CF6072632BD7861D008BF483 /* SaveSetting.swift */,
-				CF1972832BD619A500D2404F /* Main.storyboard */,
-				CFEE74952BD749B500796272 /* SearchViewController.swift */,
 				CF1972862BD619A600D2404F /* Assets.xcassets */,
-				CF1972882BD619A600D2404F /* LaunchScreen.storyboard */,
 				CF19728B2BD619A600D2404F /* Info.plist */,
 				CF1972952BD62E8800D2404F /* ApiKey.plist */,
 			);

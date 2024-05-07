@@ -32,9 +32,9 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     let realm = try! Realm()
     let pickerSet = PickerSet()
     let SettingArray = try! Realm().objects(SaveSetting.self)
-    var largeAreaRow: Int?
-    var genreRow: Int?
-    var budgetRow: Int?
+    var largeAreaRow: Int = 0
+    var genreRow: Int = 0
+    var budgetRow: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +49,9 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
             prefecturesPicker.selectRow(saveSetting.largeAreaRow, inComponent: 0, animated: true)
             genrePicker.selectRow(saveSetting.genreRow, inComponent: 0, animated: true)
             pricePicker.selectRow(saveSetting.budgetRow, inComponent: 0, animated: true)
+            self.largeAreaRow = saveSetting.largeAreaRow
+            self.genreRow = saveSetting.genreRow
+            self.budgetRow = saveSetting.budgetRow
             wifiSwitch.isOn = saveSetting.isWifi
             parkingSwitch.isOn = saveSetting.isParking
             privateRoomSwitch.isOn = saveSetting.isPrivateRoom
@@ -72,6 +75,9 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     @IBAction func closeEvent(_ sender: UIButton) {
         if let saveSetting = SettingArray.first {
             try! realm.write{
+                saveSetting.largeAreaRow = self.largeAreaRow
+                saveSetting.genreRow = self.genreRow
+                saveSetting.budgetRow = self.budgetRow
                 saveSetting.isWifi = wifiSwitch.isOn
                 saveSetting.isParking = parkingSwitch.isOn
                 saveSetting.isPrivateRoom = privateRoomSwitch.isOn
@@ -94,6 +100,9 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         else{
             let saveSetting = SaveSetting()
             try! realm.write{
+                saveSetting.largeAreaRow = self.largeAreaRow
+                saveSetting.genreRow = self.genreRow
+                saveSetting.budgetRow = self.budgetRow
                 saveSetting.isWifi = wifiSwitch.isOn
                 saveSetting.isParking = parkingSwitch.isOn
                 saveSetting.isPrivateRoom = privateRoomSwitch.isOn
@@ -115,6 +124,31 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
             }
         }
         dismiss(animated: true)
+    }
+    
+    @IBAction func resetButton(_ sender: UIButton) {
+        prefecturesPicker.selectRow(0, inComponent: 0, animated: true)
+        genrePicker.selectRow(0, inComponent: 0, animated: true)
+        pricePicker.selectRow(0, inComponent: 0, animated: true)
+        self.largeAreaRow = 0
+        self.genreRow = 0
+        self.budgetRow = 0
+        wifiSwitch.isOn = false
+        parkingSwitch.isOn = false
+        privateRoomSwitch.isOn = false
+        nonSmokingSwitch.isOn = false
+        barrierFreeSwitch.isOn = false
+        tatamiSwitch.isOn = false
+        horigotatsuSwitch.isOn = false
+        freeDrinkSwitch.isOn = false
+        freeFoodSwitch.isOn = false
+        courseSwitch.isOn = false
+        lunchSwitch.isOn = false
+        shochuSwitch.isOn = false
+        cocktailSwitch.isOn = false
+        wineSwitch.isOn = false
+        sakeSwitch.isOn = false
+        petSwitch.isOn = false
     }
     
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
@@ -160,13 +194,18 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         switch pickerView {
         case prefecturesPicker:
-            self.largeAreaRow = row
+            if row == 0{
+                prefecturesPicker.selectRow(1, inComponent: component, animated: true)
+                self.largeAreaRow = 1
+            }else{
+                self.largeAreaRow = row
+            }
         case genrePicker:
             self.genreRow = row
         case pricePicker:
             self.budgetRow = row
         default:
-            throw
+            fatalError("列を取得できません")
         }
     }
     

@@ -24,6 +24,13 @@ class ShopDetailViewController: UIViewController {
     @IBOutlet weak var barrierFree: UILabel!
     @IBOutlet weak var pet: UILabel!
     @IBOutlet weak var lunch: UILabel!
+    @IBOutlet weak var largeArea: UILabel!
+    @IBOutlet weak var genre: UILabel!
+    @IBOutlet weak var budget: UILabel!
+    
+    var shopArea: String = ""
+    var shopGenre: String = ""
+    var shopBudget: String = ""
     
     var shopLogoImage: String = ""
     var shopName: String = ""
@@ -42,12 +49,17 @@ class ShopDetailViewController: UIViewController {
     var shopBarrierFree: String = ""
     var shopPet: String = ""
     var shopLunch: String = ""
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         let imageUrl = URL(string: shopLogoImage)!
         logoImage?.af.setImage(withURL: imageUrl)
         title = shopName
+        
+//        largeArea.text = shopArea
+//        genre.text = shopGenre
+//        budget.text = shopBudget
+        
         address.text = shopAddress
         stationName.text = "\(shopStationName)駅"
         access.text = shopAccess
@@ -65,7 +77,6 @@ class ShopDetailViewController: UIViewController {
         lunch.text = "[ランチ]\(shopLunch)"
     }
     
-
     /*
     // MARK: - Navigation
 
