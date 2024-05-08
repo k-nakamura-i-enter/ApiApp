@@ -9,20 +9,20 @@ import UIKit
 import Alamofire
 import AlamofireImage
 import RealmSwift
-import SafariServices
+
 
 class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UIAdaptivePresentationControllerDelegate, ShopCellDelegate {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    //searchBar 切り替え
+    //searchBarアニメーション 切り替え
     let keyframes:[Double] = [0.0, 0.4, 3.4, 3.8]
     var animationStartDate = Date()
-    var placeHolderOpcity:Double = 1
-
+    var placeholderOpcity:Double = 1
     var currentPlaceholder = 0
-    
+    var placeholders = ["焼肉 食べ放題", "名古屋 居酒屋 宴会","札幌 ジンギスカン","福岡 ラーメン","女子会 スイーツ"]
+        
     let realm = try! Realm()
     
     var shopArray: [ApiResponse.Result.Shop] = []
@@ -32,7 +32,6 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     var isLastLoaded = false
     
     var settingArray = try! Realm().objects(SaveSetting.self)
-    var placeholders = ["焼肉 食べ放題", "名古屋 居酒屋 宴会","札幌 ジンギスカン","福岡 ラーメン","女子会 スイーツ"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +41,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         view.addSubview(searchBar)
         searchBar.frame = view.frame
+        //displayLink設置
         let displayLink = CADisplayLink(target: self, selector: #selector(handleUpdate))
         displayLink.add(to: .main, forMode: .default)
         
@@ -122,7 +122,6 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             "cocktail": String(settingFirst.isCocktail ? 1 : 0),
             "wine": String(settingFirst.isWine ? 1 : 0),
             "sake": String(settingFirst.isSake ? 1 : 0),
-            "pet": String(settingFirst.isPet ? 1 : 0),
             "format": "json"
         ]
         
@@ -138,8 +137,8 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             // レスポンス受信処理
             switch response.result {
             case .success(let apiResponse):
-                // print("受信データ: \(apiResponse)")
-                print("受信データ: \(apiResponse.results.shop.count)")
+                print("受信データ: \(apiResponse)")
+//                print("受信データ: \(apiResponse.results.shop.count)")
                 if appendLoad {
                     // 追加読み込みの場合は、現在のshopArrayに追加
                     self.shopArray += apiResponse.results.shop
@@ -193,6 +192,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         let shopDetailView = self.storyboard?.instantiateViewController(withIdentifier: "ShopDetail") as! ShopDetailViewController
         shopDetailView.shopName = shop.name
+        shopDetailView.shopId = shop.id
         shopDetailView.shopLogoImage = shop.logo_image
         shopDetailView.shopAddress = shop.address
         shopDetailView.shopStationName = shop.station_name
@@ -207,8 +207,21 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         shopDetailView.shopNonSmoking = shop.non_smoking
         shopDetailView.shopParking = shop.parking
         shopDetailView.shopBarrierFree = shop.barrier_free
-        shopDetailView.shopPet = shop.pet
         shopDetailView.shopLunch = shop.lunch
+        if shop.coupon_urls.sp == "" {
+            shopDetailView.shopCouponUrls = shop.coupon_urls.pc
+        } else {
+            shopDetailView.shopCouponUrls = shop.coupon_urls.sp
+        }
+        if shop.photo.mobile.l == "" {
+            shopDetailView.shopImage = shop.photo.pc.l
+        }else{
+            shopDetailView.shopImage = shop.photo.mobile.l
+        }
+        shopDetailView.shopArea = shop.large_area.name
+        shopDetailView.shopGenre = shop.genre.name
+        shopDetailView.shopBudget = shop.budget.name
+        shopDetailView.isFavorite = shop.isFavorite
         self.navigationController?.pushViewController(shopDetailView, animated: true)
     }
     
@@ -244,12 +257,19 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 favoriteShop.non_smoking = shop.non_smoking
                 favoriteShop.parking = shop.parking
                 favoriteShop.barrier_free = shop.barrier_free
-                favoriteShop.pet = shop.pet
                 favoriteShop.lunch = shop.lunch
+                favoriteShop.large_area_name = shop.large_area.name
+                favoriteShop.genre_name = shop.genre.name
+                favoriteShop.budget_name = shop.budget.name
                 if shop.coupon_urls.sp == "" {
                     favoriteShop.coupon_urls = shop.coupon_urls.pc
                 } else {
                     favoriteShop.coupon_urls = shop.coupon_urls.sp
+                }
+                if shop.photo.mobile.l == "" {
+                    favoriteShop.shopImage = shop.photo.pc.l
+                } else {
+                    favoriteShop.shopImage = shop.photo.mobile.l
                 }
                 realm.add(favoriteShop)
             }
@@ -293,8 +313,8 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         searchBar.searchTextField.attributedPlaceholder = NSAttributedString( string: text, attributes: [NSAttributedString.Key.foregroundColor : UIColor.init(white: 0.6, alpha: CGFloat(opacity))])
     }
 
+    //SearchBarのアニメーション更新設定
     @objc func handleUpdate() {
-
         let now = Date()
         let elapsedTime = now.timeIntervalSince(animationStartDate)
 
@@ -302,20 +322,20 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             case 0 ..< keyframes[1]:
                 let animationDuration = keyframes[1] - keyframes[0]
                 let percentage:Double = elapsedTime / animationDuration
-                placeHolderOpcity = percentage
-                setPlaceholderTextAndOpacity(opacity: placeHolderOpcity, text: placeholders[currentPlaceholder])
+                placeholderOpcity = percentage
+                setPlaceholderTextAndOpacity(opacity: placeholderOpcity, text: placeholders[currentPlaceholder])
 
             case keyframes[1] ..< keyframes[2]:
                 //keyframe 1
-                placeHolderOpcity = 1
-                setPlaceholderTextAndOpacity(opacity: placeHolderOpcity, text: placeholders[currentPlaceholder])
+                placeholderOpcity = 1
+                setPlaceholderTextAndOpacity(opacity: placeholderOpcity, text: placeholders[currentPlaceholder])
 
             case keyframes[2] ..< keyframes[3]:
                 let elapsedTimeInKeyframe = elapsedTime - keyframes[2]
                 let animationDuration = keyframes[3] - keyframes[2]
                 let percentage:Double = elapsedTimeInKeyframe / animationDuration
-                placeHolderOpcity = 1 - percentage
-                setPlaceholderTextAndOpacity(opacity: placeHolderOpcity, text: placeholders[currentPlaceholder])
+                placeholderOpcity = 1 - percentage
+                setPlaceholderTextAndOpacity(opacity: placeholderOpcity, text: placeholders[currentPlaceholder])
 
             default:
                 animationStartDate = Date()

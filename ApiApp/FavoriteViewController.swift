@@ -60,6 +60,7 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
         
         let shopDetailView = self.storyboard?.instantiateViewController(withIdentifier: "ShopDetail") as! ShopDetailViewController
         shopDetailView.shopName = shop.name
+        shopDetailView.shopId = shop.id
         shopDetailView.shopLogoImage = shop.logo_image
         shopDetailView.shopAddress = shop.address
         shopDetailView.shopStationName = shop.station_name
@@ -76,6 +77,12 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
         shopDetailView.shopBarrierFree = shop.barrier_free
         shopDetailView.shopPet = shop.pet
         shopDetailView.shopLunch = shop.lunch
+        shopDetailView.shopCouponUrls = shop.coupon_urls
+        shopDetailView.shopArea = shop.large_area_name
+        shopDetailView.shopGenre = shop.genre_name
+        shopDetailView.shopBudget = shop.budget_name
+        shopDetailView.isFavorite = true
+        shopDetailView.shopImage = shop.shopImage
         self.navigationController?.pushViewController(shopDetailView, animated: true)
     }
     

@@ -34,7 +34,22 @@ struct ApiResponse: Decodable {
             var barrier_free: String
             var pet: String
             var lunch: String
+            var photo: Photo
             var coupon_urls: CouponUrls
+            
+            struct Photo: Decodable {
+                var pc: PhotoPC
+                var mobile: PhotoMobile
+                
+                struct PhotoPC: Decodable{
+                    var l: String
+                    var s: String
+                }
+                struct PhotoMobile: Decodable{
+                    var l: String
+                    var s: String
+                }
+            }
             struct CouponUrls: Decodable {
                 var pc: String
                 var sp: String

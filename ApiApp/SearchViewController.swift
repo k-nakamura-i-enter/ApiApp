@@ -27,7 +27,6 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     @IBOutlet weak var cocktailSwitch: UISwitch!
     @IBOutlet weak var wineSwitch: UISwitch!
     @IBOutlet weak var sakeSwitch: UISwitch!
-    @IBOutlet weak var petSwitch: UISwitch!
     
     let realm = try! Realm()
     let pickerSet = PickerSet()
@@ -67,7 +66,6 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
             cocktailSwitch.isOn = saveSetting.isCocktail
             wineSwitch.isOn = saveSetting.isWine
             sakeSwitch.isOn = saveSetting.isSake
-            petSwitch.isOn = saveSetting.isPet
         }
 
     }
@@ -93,7 +91,6 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
                 saveSetting.isCocktail = cocktailSwitch.isOn
                 saveSetting.isWine = wineSwitch.isOn
                 saveSetting.isSake = sakeSwitch.isOn
-                saveSetting.isPet = petSwitch.isOn
                 realm.add(saveSetting)
             }
         }
@@ -118,7 +115,6 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
                 saveSetting.isCocktail = cocktailSwitch.isOn
                 saveSetting.isWine = wineSwitch.isOn
                 saveSetting.isSake = sakeSwitch.isOn
-                saveSetting.isPet = petSwitch.isOn
                 
                 realm.add(saveSetting)
             }
@@ -148,7 +144,6 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         cocktailSwitch.isOn = false
         wineSwitch.isOn = false
         sakeSwitch.isOn = false
-        petSwitch.isOn = false
     }
     
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {

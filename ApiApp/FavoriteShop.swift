@@ -37,4 +37,11 @@ class FavoriteShop: Object {
     @Persisted var barrier_free = ""
     @Persisted var pet = ""
     @Persisted var lunch = ""
+    
+    @Persisted var large_area_name = ""
+    @Persisted var genre_name = ""
+    @Persisted var budget_name = ""
+    
+    @Persisted var shopImage = ""
+
 }
