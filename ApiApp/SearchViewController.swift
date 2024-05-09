@@ -34,6 +34,7 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     var largeAreaRow: Int = 0
     var genreRow: Int = 0
     var budgetRow: Int = 0
+    var keyword: String = "0"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,6 +77,7 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
                 saveSetting.largeAreaRow = self.largeAreaRow
                 saveSetting.genreRow = self.genreRow
                 saveSetting.budgetRow = self.budgetRow
+                saveSetting.keyword = self.keyword
                 saveSetting.isWifi = wifiSwitch.isOn
                 saveSetting.isParking = parkingSwitch.isOn
                 saveSetting.isPrivateRoom = privateRoomSwitch.isOn
@@ -100,6 +102,7 @@ class SearchViewController: UIViewController, UIPickerViewDelegate, UIPickerView
                 saveSetting.largeAreaRow = self.largeAreaRow
                 saveSetting.genreRow = self.genreRow
                 saveSetting.budgetRow = self.budgetRow
+                saveSetting.keyword = self.keyword
                 saveSetting.isWifi = wifiSwitch.isOn
                 saveSetting.isParking = parkingSwitch.isOn
                 saveSetting.isPrivateRoom = privateRoomSwitch.isOn

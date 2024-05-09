@@ -68,7 +68,6 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        settingArray = try! Realm().objects(SaveSetting.self)
         tableView.reloadData()
     }
     
@@ -98,7 +97,6 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         // 読み込み中状態開始
         isLoading = true
-        print(settingFirst.isCourse ? 1 : 0)
         var parameters: [String: Any] = [
             "key": apiKey,
             "start": startIndex,
@@ -137,7 +135,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             // レスポンス受信処理
             switch response.result {
             case .success(let apiResponse):
-                print("受信データ: \(apiResponse)")
+//                print("受信データ: \(apiResponse)")
 //                print("受信データ: \(apiResponse.results.shop.count)")
                 if appendLoad {
                     // 追加読み込みの場合は、現在のshopArrayに追加
@@ -163,7 +161,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(shopArray.count)
+//        print(shopArray.count)
         return shopArray.count
     }
     
@@ -207,6 +205,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         shopDetailView.shopNonSmoking = shop.non_smoking
         shopDetailView.shopParking = shop.parking
         shopDetailView.shopBarrierFree = shop.barrier_free
+        shopDetailView.shopPet = shop.pet
         shopDetailView.shopLunch = shop.lunch
         if shop.coupon_urls.sp == "" {
             shopDetailView.shopCouponUrls = shop.coupon_urls.pc
@@ -257,6 +256,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 favoriteShop.non_smoking = shop.non_smoking
                 favoriteShop.parking = shop.parking
                 favoriteShop.barrier_free = shop.barrier_free
+                favoriteShop.pet = shop.pet
                 favoriteShop.lunch = shop.lunch
                 favoriteShop.large_area_name = shop.large_area.name
                 favoriteShop.genre_name = shop.genre.name
@@ -279,8 +279,9 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     @IBAction func settingButton(_ sender: UIButton) {
         let storyboard: UIStoryboard = self.storyboard!
-        let settingView = storyboard.instantiateViewController(withIdentifier: "Setting")
+        let settingView = storyboard.instantiateViewController(withIdentifier: "Setting") as! SearchViewController
         settingView.presentationController?.delegate = self
+        settingView.keyword = searchBar.text ?? "0"
         self.present(settingView, animated: true, completion: nil)
     }
     
@@ -289,7 +290,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        updateShopArray(keyWord: searchBar.text ?? "")
+        updateShopArray(keyWord: searchBar.text ?? "0")
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -300,7 +301,9 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        updateShopArray()
+        settingArray = try! Realm().objects(SaveSetting.self)
+        let settingFirst = settingArray.first ?? SaveSetting()
+        updateShopArray(keyWord: settingFirst.keyword)
     }
     
     func setStar(_ isFavorite: Bool) -> UIImage{

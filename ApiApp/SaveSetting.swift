@@ -11,6 +11,7 @@ class SaveSetting: Object{
     @Persisted var largeAreaRow: Int
     @Persisted var genreRow: Int
     @Persisted var budgetRow: Int
+    @Persisted var keyword: String = "0"
     @Persisted var isWifi: Bool = false
     @Persisted var isParking: Bool = false
     @Persisted var isPrivateRoom: Bool = false
@@ -30,7 +31,7 @@ class SaveSetting: Object{
 }
 
 struct PickerSet{
-    let largeArea: KeyValuePairs = ["0":"エリアを選択してください（※必須）",
+    let largeArea: KeyValuePairs = ["0":"選択してください（※必須）",
                                     "Z041":"北海道","Z051":"青森","Z054":"秋田","Z055":"山形",
                                     "Z052":"岩手","Z053":"宮城","Z056":"福島","Z011":"東京",
                                     "Z012":"神奈川","Z013":"埼玉","Z014":"千葉","Z016":"栃木",
@@ -43,7 +44,7 @@ struct PickerSet{
                                     "Z081":"徳島","Z083":"愛媛","Z084":"高知","Z091":"福岡",
                                     "Z092":"佐賀","Z093":"長崎","Z094":"熊本","Z095":"大分",
                                     "Z096":"宮崎","Z097":"鹿児島","Z098":"沖縄"]
-    let genre: KeyValuePairs = ["0":"お店のジャンルすべて",
+    let genre: KeyValuePairs = ["0":"ジャンルすべて",
                                 "G001":"居酒屋","G002":"ダイニングバー・バル","G003":"創作料理",
                                 "G004":"和食","G005":"洋食","G006":"イタリアン・フレンチ",
                                 "G007":"中華","G008":"焼肉・ホルモン","G017":"韓国料理",
@@ -51,7 +52,7 @@ struct PickerSet{
                                 "G011":"カラオケ・パーティ","G012":"バー・カクテル",
                                 "G013":"ラーメン","G016":"お好み焼き・もんじゃ",
                                 "G014":"カフェ・スイーツ","G015":"その他グルメ"]
-    let budget: KeyValuePairs = ["0":"価格帯にこだわらない",
+    let budget: KeyValuePairs = ["0":"こだわらない",
                                  "B009":"～500円","B010":"501～1000円","B011":"1001～1500円",
                                  "B001":"1501～2000円","B002":"2001～3000円","B003":"3001～4000円",
                                  "B008":"4001～5000円","B004":"5001～7000円","B005":"7001～10000円",

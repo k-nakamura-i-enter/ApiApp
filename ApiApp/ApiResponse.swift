@@ -43,11 +43,9 @@ struct ApiResponse: Decodable {
                 
                 struct PhotoPC: Decodable{
                     var l: String
-                    var s: String
                 }
                 struct PhotoMobile: Decodable{
                     var l: String
-                    var s: String
                 }
             }
             struct CouponUrls: Decodable {

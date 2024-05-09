@@ -84,18 +84,18 @@ class ShopDetailViewController: UIViewController {
         address.text = shopAddress
         stationName.text = "\(shopStationName)駅"
         access.text = shopAccess
-        wifi.text = "[WiFi]\(shopWifi)"
-        course.text = "[コース]\(shopCourse)"
-        freeDrink.text = "[飲み放題]\(shopFreeDrink)"
-        freeFood.text = "[食べ放題]\(shopFreeFood)"
-        privateRoom.text = "[個室]\(shopPrivateRoom)"
-        horigotatsu.text = "[掘りごたつ]\(shopHorigotatsu)"
-        tatami.text = "[座敷]\(shopTatami)"
-        nonSmoking.text = "[禁煙席]\(shopNonSmoking)"
-        parking.text = "[駐車場]\(shopParking)"
-        barrierFree.text = "[バリアフリー]\(shopBarrierFree)"
-        pet.text = "[ペット連れ]\(shopPet)"
-        lunch.text = "[ランチ]\(shopLunch)"
+        wifi.text = "[WiFi]\n\(shopWifi)"
+        course.text = "[コース]\n\(shopCourse)"
+        freeDrink.text = "[飲み放題]\n\(shopFreeDrink)"
+        freeFood.text = "[食べ放題]\n\(shopFreeFood)"
+        privateRoom.text = "[個室]\n\(shopPrivateRoom)"
+        horigotatsu.text = "[掘りごたつ]\n\(shopHorigotatsu)"
+        tatami.text = "[座敷]\n\(shopTatami)"
+        nonSmoking.text = "[禁煙席]\n\(shopNonSmoking)"
+        parking.text = "[駐車場]\n\(shopParking)"
+        barrierFree.text = "[バリアフリー]\n\(shopBarrierFree)"
+        pet.text = "[ペット連れ]\n\(shopPet)"
+        lunch.text = "[ランチ]\n\(shopLunch)"
         
         setupButton()
         setupCoupon()
@@ -185,7 +185,7 @@ class ShopDetailViewController: UIViewController {
     @objc func imageUpdate(){
         let now = Date()
         let elapsedTime = now.timeIntervalSince(animationStartDate)
-        print(elapsedTime.description)
+//        print(elapsedTime.description)
 
         switch elapsedTime {
             case 0 ..< keyframes[1]:
